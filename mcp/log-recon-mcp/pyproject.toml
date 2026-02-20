@@ -1,0 +1,17 @@
+[project]
+name = "log-recon-mcp"
+version = "0.1.0"
+description = "Lightweight hello-world MCP server built with FastMCP."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "fastmcp>=2.14.4",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["server", "mcp_app"]
+packages = ["tools"]
