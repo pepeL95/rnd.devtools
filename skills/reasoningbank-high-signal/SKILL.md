@@ -1,6 +1,6 @@
 ---
 name: reasoningbank-high-signal
-description: "Capture and persist only evidence-backed, high-signal learning data from the current conversation to improve future agent behavior in this workspace: major lessons, critical failures, corrections, successful milestone patterns, and durable technical preferences. Trigger only at major learning milestones (explicit user correction, meaningful mistake/rework, or important success), never for routine/trivial tasks. Write structured entries to .deliverables/reasoningbank/ as mm-dd-yyyy-{short-name}.md so records are reusable as future RL-style training signals."
+description: "Capture and persist only evidence-backed, high-signal learning data from the current reasoning trajectory/conversation to improve future agent behavior in this workspace: major lessons, critical failures, corrections, successful milestone patterns, and durable technical preferences. Trigger only at major learning milestones (explicit user correction, meaningful mistake/rework, or important success), never for routine/trivial tasks. Write structured entries to .deliverables/reasoningbank/ as mm-dd-yyyy-{short-name}.md so records are reusable as future RL-style training signals."
 ---
 
 # Reasoningbank High Signal
@@ -24,6 +24,7 @@ Keep an item only if all are true:
 2. Specific: tied to concrete constraints/tools/workflows/quality bars.
 3. Non-trivial: not generic best practice or boilerplate.
 4. Evidenced: supported by explicit statements, corrections, or outcomes in this conversation.
+5. Generalizable: captures a reusable pattern/approach that can transfer to similar future tasks.
 
 Drop:
 - Tone/style preferences that do not affect deliverable acceptance.
@@ -56,6 +57,8 @@ Drop:
 4. Keep only candidates with score >= 5.
 
 5. Merge duplicates and keep total content tight.
+6. Prefer correction/recovery patterns and approaches that can be reused in similar contexts.
+7. Assign one entry-level `RL Signal Score` (0-10) based on impact, reusability, evidence strength, and durability.
 
 ## Required Entry Structure
 Each entry must contain these sections in order:
@@ -65,16 +68,30 @@ Each entry must contain these sections in order:
 4. `Failures / Friction to Avoid`
 5. `Durable Technical Preferences`
 6. `Rule Updates for Future Runs`
-7. `Rejected Low-Signal Candidates`
+7. `RL Signal Score`
+8. `Rejected Low-Signal Candidates`
 
 For insight bullets in sections 2-6, include fields:
 - `insight` (or `pattern`/`rule`)
 - `why_it_matters`
 - `evidence`
+- `generalization` (how to reuse this on similar tasks)
 - `confidence` (`High|Medium|Low`)
+
+For section 7 (`RL Signal Score`), include:
+- `score` (0-10)
+- `breakdown`:
+  - `impact` (0-2)
+  - `reusability` (0-2)
+  - `evidence_strength` (0-2)
+  - `durability` (0-2)
+  - `bonus` (0-2; use only for unusually high leverage)
+- `rationale` (1-3 concise sentences)
 
 ## Quality Bar
 - Prefer 5-12 total high-signal items across sections 2-6.
 - No fluff, no social commentary, no generic advice.
 - Every retained item must include evidence.
+- Prioritize entries that preserve reusable patterns over one-off observations.
+- `RL Signal Score` must be evidence-backed; inflate neither score nor rationale.
 - If insufficient signal, create no entry and state: `Insufficient signal for durable insight extraction.` in normal response.

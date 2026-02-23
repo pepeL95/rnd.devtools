@@ -46,31 +46,47 @@ def build_template(title: str, date_str: str) -> str:
 - insight:
   why_it_matters:
   evidence:
+  generalization:
   confidence:
 
 ## Success Patterns to Repeat
 - pattern:
   why_it_matters:
   evidence:
+  generalization:
   confidence:
 
 ## Failures / Friction to Avoid
 - pattern:
   why_it_matters:
   evidence:
+  generalization:
   confidence:
 
 ## Durable Technical Preferences
 - insight:
   why_it_matters:
   evidence:
+  generalization:
   confidence:
 
 ## Rule Updates for Future Runs
 - rule:
   why_it_matters:
+  evidence:
+  generalization:
   trigger:
   confidence:
+
+## RL Signal Score
+- score:
+- breakdown:
+  impact:
+  reusability:
+  evidence_strength:
+  durability:
+  bonus:
+- rationale:
 
 ## Rejected Low-Signal Candidates
 - candidate:
