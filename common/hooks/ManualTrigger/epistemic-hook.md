@@ -47,7 +47,7 @@ When persisted to disk, use:
 
 Session key resolution (plugin optional):
 1. If `.deliverables/reasoningbank/.current-session` exists and is non-empty, use it.
-2. Else if reasoningbank generator script exists at `plugins/reasoningbank/skills/reasoningbank-high-signal/scripts/create_reasoningbank_entry.py`, use it to create/resolve session key.
+2. Else if reasoningbank generator script exists at `plugins/reasoningbank/skills/reasoningbank/scripts/create_reasoningbank_entry.py`, use it to create/resolve session key.
 3. Else create fallback session key with format `yyyy-mm-ddthh-mm-ssz-<shortid>`, write it to `.deliverables/reasoningbank/.current-session`, ensure `.deliverables/reasoningbank/sessions/{session-key}/` exists, and write entry directly.
 
 Write deliverable content using this exact structure:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reasoningbank"
+  short_description: "Capture high-signal execution insights"
+  default_prompt: "Use $reasoningbank to extract high-signal lessons and write a reasoningbank entry."

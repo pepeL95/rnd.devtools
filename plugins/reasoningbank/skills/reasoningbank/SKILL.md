@@ -1,5 +1,5 @@
 ---
-name: reasoningbank-high-signal
+name: reasoningbank
 description: "Capture and persist only evidence-backed, high-signal learning data from the current reasoning trajectory/conversation to improve future agent behavior in this workspace: major lessons, critical failures, corrections, successful milestone patterns, and durable technical preferences. Trigger only at major learning milestones (explicit user correction, meaningful mistake/rework, or important success), never for routine/trivial tasks. Write structured entries to .deliverables/reasoningbank/sessions/{session-key}/ as mm-dd-yyyy-{short-name}.md so records are reusable as future RL-style training signals."
 ---
 
