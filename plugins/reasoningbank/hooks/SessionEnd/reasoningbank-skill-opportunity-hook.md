@@ -1,6 +1,6 @@
 # SessionEnd Hook - Reasoningbank Skill Opportunity Scan
 
-At session end, review `.deliverables/reasoningbank/` and assess whether any **high-value** skill should be created from accumulated learnings.
+At session end, review the active reasoningbank session and assess whether any **high-value** skill should be created from accumulated learnings.
 
 ## Objective
 
@@ -10,10 +10,11 @@ Default stance: **propose none** unless evidence is compelling.
 
 ## Inputs
 
-- Files under `.deliverables/reasoningbank/` (if present)
+- Active session key from `.deliverables/reasoningbank/.current-session`
+- Session files under `.deliverables/reasoningbank/sessions/{session-key}/`
 - Current session context
 
-If the directory is missing or empty, stop.
+If `.current-session` is missing, empty, or the session folder has no entries, stop.
 
 ## Hard Gate (All Required)
 
@@ -40,8 +41,9 @@ Reject candidates that are:
 
 ## Evaluation Process
 
-1. Scan reasoningbank entries and cluster recurring patterns.
-2. Score each cluster (0-2 each):
+1. Resolve `session-key` from `.deliverables/reasoningbank/.current-session`.
+2. Scan entries only from `.deliverables/reasoningbank/sessions/{session-key}/` and cluster recurring patterns.
+3. Score each cluster (0-2 each):
 
 - Reuse frequency
 - Outcome impact
@@ -49,9 +51,9 @@ Reject candidates that are:
 - Durability over time
 - RL signal strength from supporting entries
 
-3. Keep only clusters with score >= 8/10.
-4. Compare survivors against "rule update" alternative.
-5. Propose at most 1-2 skills per session; prefer 0.
+4. Keep only clusters with score >= 8/10.
+5. Compare survivors against "rule update" alternative.
+6. Propose at most 1-2 skills per session; prefer 0.
 
 ## Output Format (Required)
 
@@ -70,7 +72,8 @@ For each recommendation:
 - `reusable_pattern`: what generalizable pattern is captured
 - `trigger`: when this skill should activate
 - `expected_roi`: concrete time/risk reduction rationale
-- `evidence`: 2-4 entry filenames from `.deliverables/reasoningbank/`
+- `session_key`: active session key used for this scan
+- `evidence`: 2-4 entry filenames from `.deliverables/reasoningbank/sessions/{session-key}/`
 - `rl_score_signal`: summarized score evidence from supporting entries (min/avg/max)
 - `why_not_rule_only`: why a rule/hook update is insufficient
 - `confidence`: High | Medium | Low

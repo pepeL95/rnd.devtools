@@ -1,6 +1,6 @@
 ---
 name: reasoningbank-high-signal
-description: "Capture and persist only evidence-backed, high-signal learning data from the current reasoning trajectory/conversation to improve future agent behavior in this workspace: major lessons, critical failures, corrections, successful milestone patterns, and durable technical preferences. Trigger only at major learning milestones (explicit user correction, meaningful mistake/rework, or important success), never for routine/trivial tasks. Write structured entries to .deliverables/reasoningbank/ as mm-dd-yyyy-{short-name}.md so records are reusable as future RL-style training signals."
+description: "Capture and persist only evidence-backed, high-signal learning data from the current reasoning trajectory/conversation to improve future agent behavior in this workspace: major lessons, critical failures, corrections, successful milestone patterns, and durable technical preferences. Trigger only at major learning milestones (explicit user correction, meaningful mistake/rework, or important success), never for routine/trivial tasks. Write structured entries to .deliverables/reasoningbank/sessions/{session-key}/ as mm-dd-yyyy-{short-name}.md so records are reusable as future RL-style training signals."
 ---
 
 # Reasoningbank High Signal
@@ -14,9 +14,10 @@ Capture only evidence-backed insights that improve future technical execution.
 - Skip entry creation when signal is weak; do not force a log.
 
 ## Output Contract
-- Write entries to `.deliverables/reasoningbank/`.
+- Write entries to `.deliverables/reasoningbank/sessions/{session-key}/`.
 - File name must be `mm-dd-yyyy-{short-name}.md`.
-- Use `scripts/create_reasoningbank_entry.py` to generate the path/scaffold before writing.
+- Track active session in `.deliverables/reasoningbank/.current-session`.
+- Use `scripts/create_reasoningbank_entry.py` to resolve session key and generate the path/scaffold before writing.
 
 ## High-Signal Filter (Hard Gate)
 Keep an item only if all are true:
@@ -62,23 +63,24 @@ Drop:
 
 ## Required Entry Structure
 Each entry must contain these sections in order:
-1. `Context Snapshot`
-2. `Lessons Learned`
-3. `Success Patterns to Repeat`
-4. `Failures / Friction to Avoid`
-5. `Durable Technical Preferences`
-6. `Rule Updates for Future Runs`
-7. `RL Signal Score`
-8. `Rejected Low-Signal Candidates`
+1. Header metadata bullets: `Date`, `Source`, `Session Key`, `Entry ID`, `Signal standard`
+2. `Context Snapshot`
+3. `Lessons Learned`
+4. `Success Patterns to Repeat`
+5. `Failures / Friction to Avoid`
+6. `Durable Technical Preferences`
+7. `Rule Updates for Future Runs`
+8. `RL Signal Score`
+9. `Rejected Low-Signal Candidates`
 
-For insight bullets in sections 2-6, include fields:
+For insight bullets in sections 3-7, include fields:
 - `insight` (or `pattern`/`rule`)
 - `why_it_matters`
 - `evidence`
 - `generalization` (how to reuse this on similar tasks)
 - `confidence` (`High|Medium|Low`)
 
-For section 7 (`RL Signal Score`), include:
+For section 8 (`RL Signal Score`), include:
 - `score` (0-10)
 - `breakdown`:
   - `impact` (0-2)
