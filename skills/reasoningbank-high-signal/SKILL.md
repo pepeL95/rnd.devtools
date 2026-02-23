@@ -1,0 +1,80 @@
+---
+name: reasoningbank-high-signal
+description: "Capture and persist only evidence-backed, high-signal learning data from the current conversation to improve future agent behavior in this workspace: major lessons, critical failures, corrections, successful milestone patterns, and durable technical preferences. Trigger only at major learning milestones (explicit user correction, meaningful mistake/rework, or important success), never for routine/trivial tasks. Write structured entries to .deliverables/reasoningbank/ as mm-dd-yyyy-{short-name}.md so records are reusable as future RL-style training signals."
+---
+
+# Reasoningbank High Signal
+
+Capture only evidence-backed insights that improve future technical execution.
+
+## Operating Mode
+- Run this skill autonomously at the end of non-trivial tasks.
+- Run this skill after meaningful correction loops (rejection, rework, changed direction).
+- Run this skill after notable wins (clear strategy that worked) or failures (preventable friction).
+- Skip entry creation when signal is weak; do not force a log.
+
+## Output Contract
+- Write entries to `.deliverables/reasoningbank/`.
+- File name must be `mm-dd-yyyy-{short-name}.md`.
+- Use `scripts/create_reasoningbank_entry.py` to generate the path/scaffold before writing.
+
+## High-Signal Filter (Hard Gate)
+Keep an item only if all are true:
+1. Actionable: changes future implementation, planning, validation, or risk handling.
+2. Specific: tied to concrete constraints/tools/workflows/quality bars.
+3. Non-trivial: not generic best practice or boilerplate.
+4. Evidenced: supported by explicit statements, corrections, or outcomes in this conversation.
+
+Drop:
+- Tone/style preferences that do not affect deliverable acceptance.
+- One-off logistics with no likely reuse.
+- Restatements of completed work.
+- Vague claims without evidence.
+
+## Extraction Workflow
+0. Read `references/high-signal-rubric.md` before extracting; treat it as mandatory scoring/filter guidance.
+
+1. Gather evidence units from the conversation:
+- explicit requirements
+- corrections/rejections
+- repeated asks
+- success/failure outcomes
+- mistakes and recovery moves
+
+2. Convert to candidate insights grouped by:
+- lessons learned
+- success patterns to repeat
+- failure/friction patterns to avoid
+- durable technical preferences
+- candidate operating rules
+
+3. Score each candidate 0-2 on:
+- Impact
+- Reusability
+- Confidence
+
+4. Keep only candidates with score >= 5.
+
+5. Merge duplicates and keep total content tight.
+
+## Required Entry Structure
+Each entry must contain these sections in order:
+1. `Context Snapshot`
+2. `Lessons Learned`
+3. `Success Patterns to Repeat`
+4. `Failures / Friction to Avoid`
+5. `Durable Technical Preferences`
+6. `Rule Updates for Future Runs`
+7. `Rejected Low-Signal Candidates`
+
+For insight bullets in sections 2-6, include fields:
+- `insight` (or `pattern`/`rule`)
+- `why_it_matters`
+- `evidence`
+- `confidence` (`High|Medium|Low`)
+
+## Quality Bar
+- Prefer 5-12 total high-signal items across sections 2-6.
+- No fluff, no social commentary, no generic advice.
+- Every retained item must include evidence.
+- If insufficient signal, create no entry and state: `Insufficient signal for durable insight extraction.` in normal response.
