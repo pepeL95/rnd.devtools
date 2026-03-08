@@ -40,12 +40,7 @@ Create or update the following, keeping content concise and practical:
 
 - The canonical, cross-agent "operating manual."
 
-2. Repo Recon Report (required)
-
-- Save as: docs/repo-recon.md (or repo root if docs/ doesn't exist).
-- A snapshot of what you learned and any open questions.
-
-3. Optional: lightweight command inventory (recommended)
+2. Optional: lightweight command inventory (recommended)
 
 - A list of commonly-run commands and where they live (package.json scripts, Makefile, task runner, etc.).
 - Keep the "source of truth" as the repo's actual scripts/configs.
@@ -66,18 +61,14 @@ Produce a clear structure map:
 
 - Top-level directories and their purpose (src/, apps/, packages/, services/, infra/, scripts/, docs/, etc.).
 - Key entrypoints (main app, CLI, API server, worker, infra modules).
-- "Where code lives" vs "generated/vendor" vs "third-party."
-
-Capture in docs/repo-recon.md:
-
+- Critical dependencies and configurations (.env files, secrets management, required environment variables).
 - A short "tree summary" (not exhaustive, just meaningful).
-- Any directory-level "special rules" that deserve overrides later.
 
 ### Step 2 - Identify the Tech Stack + Toolchain
 
 Determine and record:
 
-- Language(s) + framework(s)
+- Language(s) + framework(s) + data layer
 - Package manager(s) (npm/pnpm/yarn, pip/poetry/uv, cargo, go mod, etc.)
 - Build system (Makefile, task runner, Nx/Turbo, Bazel, Gradle, etc.)
 - Lint/format tools (eslint, prettier, ruff, black, golangci-lint, etc.)
@@ -115,7 +106,6 @@ Establish project conventions that prevent damage:
 - Where agents must NOT touch (e.g., vendor/, dist/, build artifacts, lockfiles unless requested, secrets)
 - Security rules: no secrets, no credentials, no unsafe logging
 - Style rules: formatting source of truth, file naming, directory conventions
-- Git workflow: branch naming, commit conventions, PR checklist, required checks
 
 Keep these rules short, testable, and action-oriented.
 
@@ -123,7 +113,7 @@ Keep these rules short, testable, and action-oriented.
 
 Write AGENTS.md as the "single pane of glass." Include:
 
-A) Purpose
+A) Summary
 
 - One paragraph: what the repo is and how it's structured.
 
@@ -131,27 +121,32 @@ B) Setup commands
 
 - Bullet list of exact commands (with flags if needed).
 
-C) Verification commands
+C) Testing Commands
+
+- Testing commands with and without coverage
+
+D) Verification commands
 
 - "Before you open a PR or claim done, run: ..."
 
-D) Project structure
+E) Project structure
 
 - A short map with 6-15 bullets max.
 
-E) Code style + conventions
+F) Code style + conventions
 
 - Where style rules live; how formatting is enforced.
+- For commit messages, make sure to extract structural patterns from samples in the commit history
 
-F) Boundaries
+G) Boundaries
 
 - Explicit "Do not modify ..." list.
 
-G) Change policy
+H) Change policy
 
 - If changing behavior, update docs/tests; avoid breaking public APIs; etc.
 
-H) Directory overrides (optional)
+I) Directory overrides (optional)
 
 - If some subdirectories have different rules, add "Overrides live in: path/to/AGENTS.override.md" and create those files only if needed.
 
@@ -160,11 +155,14 @@ H) Directory overrides (optional)
 Create .agents/rules/ with separate markdown files (small and scannable):
 
 - security.md
+- engineering.md
+  - Good Software Engineering practices
+  - Object Oriented Programming (OOP) principles
+  - Instruct agents to consider Software Design Patterns (e.g., Singleton, Factory, Observer, etc.)
+  - Optimal Data Structures design
 - coding-style.md
 - testing.md
-- git-workflow.md
 - architecture.md (only if useful and accurate)
-- agents.md (how/when to delegate)
 
 Each rules file should contain:
 
@@ -172,20 +170,7 @@ Each rules file should contain:
 - "Never" rules
 - Quick checklist
 
-### Step 8 - Produce the Repo Recon Report
-
-Write docs/repo-recon.md with:
-
-- Summary (what the project is)
-- Stack + tooling
-- How to run + verify
-- Structure map
-- Risks / sharp edges
-- Unknowns + TODOs (questions for maintainers)
-
-This report is the "handoff artifact" for the orchestrator and other agents.
-
-### Step 9 - Self-Check (Quality Gate)
+### Step 8 - Self-Check (Quality Gate)
 
 Before finishing, ensure:
 
@@ -207,11 +192,34 @@ Before finishing, ensure:
 
 - <What this repo is, in 1-3 sentences>
 
+## Stack
+
+- Languages:
+- Frameworks:
+- Package manager:
+- Build system:
+- Tests:
+- Lint/format:
+- Data Layer:
+- Secret Management (if any):
+- CI/CD:
+
+## Dependencies
+
+- Indicate critical dependencies (e.g., .env files, required environment variables)
+
 ## Quickstart
 
 - Install: <command>
 - Dev: <command>
 - Build: <command>
+
+## Testing Commands
+
+- Test command without coverage
+- Test command with coverage
+- Test command with minimal output
+  - NOTE: indicate to use this command by default to minimize context pollution; then, use others if need to explore further
 
 ## Verification (run before claiming "done")
 
@@ -246,57 +254,17 @@ Before finishing, ensure:
 - New docs: <path>
 - New tests: <path>
 
-## Overrides
+## Rule links
 
-- If directory-specific rules exist, they live in:
-  - <path>/AGENTS.override.md
-
----
-
-### 2) docs/repo-recon.md Template
-
-# Repo Recon Report
-
-## Summary
-
-- <What the project does>
-
-## Stack
-
-- Languages:
-- Frameworks:
-- Package manager:
-- Build system:
-- Tests:
-- Lint/format:
-- CI:
-
-## Golden commands
-
-- Install:
-- Dev:
-- Build:
-- Test:
-- Lint:
-- Typecheck:
-
-## Structure map
-
-- <dir> - <meaning>
-- <dir> - <meaning>
-
-## Sharp edges / risks
-
-- <e.g., codegen required, migrations, env vars, etc.>
-
-## Unknowns / TODOs
-
-- [ ] <question to resolve>
-- [ ] <missing command/step>
+- [Security rules](.agents/rules/security.md) — always
+- [Engineering rules](.agents/rules/engineering.md) — review when designing features or refactoring
+- [Coding style](.agents/rules/coding-style.md) — review before writing or modifying code (if not already)
+- [Testing rules](.agents/rules/testing.md) — review when adding or modifying tests
+- [Architecture rules](.agents/rules/architecture.md) — review when making structural changes
 
 ---
 
-### 3) .agents/rules/security.md (Example Structure)
+### 2) .agents/rules/security.md (Example Structure)
 
 # Security rules
 
@@ -327,7 +295,7 @@ If the repository is greenfield or missing conventions, propose:
 - A minimal test command that runs in CI.
 - A single "verify" command (or Make target) that runs lint + typecheck + tests.
 
-If adding these would be invasive, document the recommendation in docs/repo-recon.md instead of implementing.
+If adding these would be invasive, document the recommendation in docs/proposals.md instead of implementing.
 
 ---
 
@@ -345,6 +313,5 @@ If adding these would be invasive, document the recommendation in docs/repo-reco
 You are done when:
 
 - AGENTS.md exists and is actionable.
-- docs/repo-recon.md exists and reflects what you actually observed.
 - Rules and agents (if created) are referenced from AGENTS.md.
 - The repo has a clear skeleton and conventions other agents can follow.
