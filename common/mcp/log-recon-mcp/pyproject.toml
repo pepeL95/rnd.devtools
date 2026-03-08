@@ -1,5 +1,5 @@
 [project]
-name = "log-recon-mcp"
+name = "log-efficient-mcp"
 version = "0.1.0"
 description = "Lightweight hello-world MCP server built with FastMCP."
 readme = "README.md"

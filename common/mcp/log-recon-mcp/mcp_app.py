@@ -2,4 +2,4 @@
 
 from fastmcp import FastMCP
 
-mcp = FastMCP(name="log-recon-mcp")
+mcp = FastMCP(name="log-efficient-mcp")

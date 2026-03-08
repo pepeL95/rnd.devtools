@@ -1,4 +1,4 @@
-# log-recon-mcp
+# log-efficient-mcp
 
 Lightweight MCP server using FastMCP, with a log exploration tool for large files.
 

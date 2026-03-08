@@ -1,4 +1,4 @@
-"""FastMCP server entrypoint for log-recon-mcp."""
+"""FastMCP server entrypoint for log-efficient-mcp."""
 
 from mcp_app import mcp
 from tools import health, log_explore, script_runna

@@ -9,7 +9,7 @@ class HealthTests(unittest.TestCase):
     def test_health_returns_ok_payload(self):
         result = server.health()
         self.assertEqual(result["status"], "ok")
-        self.assertEqual(result["service"], "log-recon-mcp")
+        self.assertEqual(result["service"], "log-efficient-mcp")
         self.assertIn("timestamp_utc", result)
         self.assertTrue(result["timestamp_utc"])
 

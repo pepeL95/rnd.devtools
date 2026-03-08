@@ -1,4 +1,4 @@
-"""Tool module exports for the log-recon-mcp server."""
+"""Tool module exports for the log-efficient-mcp server."""
 
 from tools.file_reckoning import log_explore
 from tools.health import health

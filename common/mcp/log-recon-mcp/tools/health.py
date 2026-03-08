@@ -21,6 +21,6 @@ def health() -> dict[str, str]:
     """
     return {
         "status": "ok",
-        "service": "log-recon-mcp",
+        "service": "log-efficient-mcp",
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
     }
