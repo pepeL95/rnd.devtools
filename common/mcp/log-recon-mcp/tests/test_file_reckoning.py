@@ -30,21 +30,21 @@ class FileReckoningTests(unittest.TestCase):
         self.tmpdir.cleanup()
 
     def test_stats_action(self):
-        result = server.file_reckoning(path=str(self.file_path), action="stats")
+        result = server.log_explore(path=str(self.file_path), action="stats")
         self.assertEqual(result["action"], "stats")
         self.assertEqual(result["stats"]["lines"], 6)
         self.assertGreater(result["stats"]["bytes"], 0)
 
     def test_head_action(self):
-        result = server.file_reckoning(path=str(self.file_path), action="head", max_lines=2)
+        result = server.log_explore(path=str(self.file_path), action="head", max_lines=2)
         self.assertEqual(result, "INFO start\nWARN disk low\n")
 
     def test_tail_action(self):
-        result = server.file_reckoning(path=str(self.file_path), action="tail", max_lines=2)
+        result = server.log_explore(path=str(self.file_path), action="tail", max_lines=2)
         self.assertEqual(result, "ERROR failed to connect id=def456 code=503\nINFO done\n")
 
     def test_search_action_with_context(self):
-        result = server.file_reckoning(
+        result = server.log_explore(
             path=str(self.file_path),
             action="search",
             query="ERROR",
@@ -64,7 +64,7 @@ class FileReckoningTests(unittest.TestCase):
         )
 
     def test_extract_action(self):
-        result = server.file_reckoning(
+        result = server.log_explore(
             path=str(self.file_path),
             action="extract",
             query=r"id=(\w+)\s+code=(\d+)",
@@ -75,7 +75,7 @@ class FileReckoningTests(unittest.TestCase):
 
     def test_search_requires_query(self):
         with self.assertRaises(ValueError):
-            server.file_reckoning(path=str(self.file_path), action="search", query="")
+            server.log_explore(path=str(self.file_path), action="search", query="")
 
 
 if __name__ == "__main__":

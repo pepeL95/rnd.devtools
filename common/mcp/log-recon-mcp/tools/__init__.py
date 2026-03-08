@@ -1,7 +1,7 @@
 """Tool module exports for the log-recon-mcp server."""
 
-from tools.file_reckoning import file_reckoning
+from tools.file_reckoning import log_explore
 from tools.health import health
 from tools.script_runna import script_runna
 
-__all__ = ["file_reckoning", "script_runna", "health"]
+__all__ = ["log_explore", "script_runna", "health"]

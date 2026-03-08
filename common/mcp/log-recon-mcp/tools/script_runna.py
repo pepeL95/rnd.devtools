@@ -48,7 +48,7 @@ def script_runna(
     - Use `return_mode="path_only"` for noisy tasks (installs, builds, tests, long logs).
     - Use `return_mode="auto"` for normal tasks; only small outputs are returned inline.
     - Use `return_mode="inline_only"` only when immediate text output is required.
-    - For large outputs, chain with `file_reckoning` on the returned `output_file`.
+    - For large outputs, chain with `log_explore` on the returned `output_file`.
     - Reserve direct shell execution (`exec_command`) for short checks like `pwd`, `ls`, and compact `rg` queries.
 
     Core behavior:

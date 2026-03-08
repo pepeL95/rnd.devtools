@@ -183,8 +183,8 @@ def _stats(path: Path, *, encoding: str) -> dict[str, object]:
     }
 
 
-@mcp.tool(name="file_reckoning")
-def file_reckoning(
+@mcp.tool(name="log_explore")
+def log_explore(
     path: str,
     action: Literal["head", "tail", "range", "search", "extract", "stats"] = "head",
     query: str = "",

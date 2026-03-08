@@ -20,9 +20,9 @@ python server.py
 
 This starts the MCP server over STDIO (FastMCP default).
 
-## Main Tool: `file_reckoning`
+## Main Tool: `log_explore`
 
-`file_reckoning` is designed for incremental analysis so an agent does not need to load an entire file.
+`log_explore` is designed for incremental analysis so an agent does not need to load an entire file.
 
 Use this as the default entrypoint for large logs/text files when extracting signal with minimal context usage.
 
@@ -77,7 +77,7 @@ Behavior:
 Recommended chaining:
 
 1. Run `script_runna`.
-2. If `output_file` is returned, inspect with `file_reckoning` using `stats`, `tail`, or `search`.
+2. If `output_file` is returned, inspect with `log_explore` using `stats`, `tail`, or `search`.
 
 Agent usage policy:
 
@@ -87,4 +87,4 @@ Agent usage policy:
 4. Prefer `return_mode="path_only"` for noisy commands (`pip install`, builds, tests, package managers, verbose scripts).
 5. Prefer `return_mode="auto"` for exploratory commands where short output might be useful.
 6. Use `return_mode="inline_only"` only when full immediate output is explicitly needed.
-7. For large outputs, do not re-run inline; inspect the log via `file_reckoning` instead.
+7. For large outputs, do not re-run inline; inspect the log via `log_explore` instead.
