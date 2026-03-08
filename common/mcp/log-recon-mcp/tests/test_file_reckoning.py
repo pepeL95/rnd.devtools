@@ -37,15 +37,11 @@ class FileReckoningTests(unittest.TestCase):
 
     def test_head_action(self):
         result = server.file_reckoning(path=str(self.file_path), action="head", max_lines=2)
-        self.assertEqual(len(result["rows"]), 2)
-        self.assertEqual(result["rows"][0]["line"], 1)
-        self.assertEqual(result["rows"][0]["text"], "INFO start")
+        self.assertEqual(result, "INFO start\nWARN disk low\n")
 
     def test_tail_action(self):
         result = server.file_reckoning(path=str(self.file_path), action="tail", max_lines=2)
-        self.assertEqual(len(result["rows"]), 2)
-        self.assertEqual(result["rows"][0]["line"], 5)
-        self.assertEqual(result["rows"][1]["text"], "INFO done")
+        self.assertEqual(result, "ERROR failed to connect id=def456 code=503\nINFO done\n")
 
     def test_search_action_with_context(self):
         result = server.file_reckoning(
@@ -56,10 +52,16 @@ class FileReckoningTests(unittest.TestCase):
             after=1,
             max_matches=1,
         )
-        kinds = [row["kind"] for row in result["rows"]]
-        self.assertIn("before", kinds)
-        self.assertIn("match", kinds)
-        self.assertIn("after", kinds)
+        self.assertEqual(
+            result,
+            "".join(
+                [
+                    "WARN disk low\n",
+                    "ERROR failed to connect id=abc123 code=500\n",
+                    "INFO retry\n",
+                ]
+            ),
+        )
 
     def test_extract_action(self):
         result = server.file_reckoning(
@@ -68,8 +70,8 @@ class FileReckoningTests(unittest.TestCase):
             query=r"id=(\w+)\s+code=(\d+)",
             max_matches=2,
         )
-        self.assertEqual(len(result["rows"]), 2)
-        self.assertEqual(result["rows"][0]["groups"], ["abc123", "500"])
+        self.assertIn("ERROR failed to connect id=abc123 code=500", result)
+        self.assertIn("ERROR failed to connect id=def456 code=503", result)
 
     def test_search_requires_query(self):
         with self.assertRaises(ValueError):

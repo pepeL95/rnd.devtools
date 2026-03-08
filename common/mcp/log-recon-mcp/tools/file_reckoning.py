@@ -23,18 +23,18 @@ def _head_lines(path: Path, *, max_lines: int, encoding: str) -> list[dict[str, 
     rows: list[dict[str, object]] = []
     with path.open("r", encoding=encoding, errors="replace") as f:
         for idx, line in enumerate(f, start=1):
-            rows.append({"line": idx, "text": line.rstrip("\n")})
+            rows.append({"line": idx, "text": line.rstrip("\n"), "raw": line})
             if len(rows) >= max_lines:
                 break
     return rows
 
 
 def _tail_lines(path: Path, *, max_lines: int, encoding: str) -> list[dict[str, object]]:
-    lines: deque[tuple[int, str]] = deque(maxlen=max_lines)
+    lines: deque[tuple[int, str, str]] = deque(maxlen=max_lines)
     with path.open("r", encoding=encoding, errors="replace") as f:
         for idx, line in enumerate(f, start=1):
-            lines.append((idx, line.rstrip("\n")))
-    return [{"line": ln, "text": txt} for ln, txt in lines]
+            lines.append((idx, line.rstrip("\n"), line))
+    return [{"line": ln, "text": txt, "raw": raw} for ln, txt, raw in lines]
 
 
 def _range_lines(
@@ -52,7 +52,7 @@ def _range_lines(
                 continue
             if idx > end_line:
                 break
-            rows.append({"line": idx, "text": line.rstrip("\n")})
+            rows.append({"line": idx, "text": line.rstrip("\n"), "raw": line})
             if len(rows) >= max_lines:
                 break
     return rows
@@ -71,7 +71,7 @@ def _search_lines(
 ) -> list[dict[str, object]]:
     flags = re.IGNORECASE if ignore_case else 0
     pattern = re.compile(query, flags) if regex else None
-    before_buffer: deque[tuple[int, str]] = deque(maxlen=max(0, before))
+    before_buffer: deque[tuple[int, str, str]] = deque(maxlen=max(0, before))
     rows: list[dict[str, object]] = []
     pending_after = 0
     seen = set()
@@ -91,23 +91,23 @@ def _search_lines(
             is_match = _matched(line) if not reached_limit else False
 
             if is_match:
-                for ln, txt in before_buffer:
+                for ln, txt, raw_txt in before_buffer:
                     if ln not in seen:
-                        rows.append({"line": ln, "text": txt, "kind": "before"})
+                        rows.append({"line": ln, "text": txt, "raw": raw_txt, "kind": "before"})
                         seen.add(ln)
                 if idx not in seen:
-                    rows.append({"line": idx, "text": line, "kind": "match"})
+                    rows.append({"line": idx, "text": line, "raw": raw, "kind": "match"})
                     seen.add(idx)
                     match_count += 1
                 pending_after = max(pending_after, after)
                 if match_count >= max_matches:
                     reached_limit = True
             elif pending_after > 0 and idx not in seen:
-                rows.append({"line": idx, "text": line, "kind": "after"})
+                rows.append({"line": idx, "text": line, "raw": raw, "kind": "after"})
                 seen.add(idx)
                 pending_after -= 1
 
-            before_buffer.append((idx, line))
+            before_buffer.append((idx, line, raw))
             if reached_limit and pending_after == 0:
                 break
 
@@ -132,7 +132,7 @@ def _extract_lines(
             m = pattern.search(line)
             if not m:
                 continue
-            row: dict[str, object] = {"line": idx, "text": line}
+            row: dict[str, object] = {"line": idx, "text": line, "raw": raw}
             if m.groupdict():
                 row["groups"] = m.groupdict()
             else:
@@ -141,6 +141,17 @@ def _extract_lines(
             if len(rows) >= max_matches:
                 break
     return rows
+
+
+def _rows_to_snippet(rows: list[dict[str, object]]) -> str:
+    raw_parts: list[str] = []
+    for row in rows:
+        raw = row.get("raw")
+        if isinstance(raw, str):
+            raw_parts.append(raw)
+        else:
+            raw_parts.append(f"{row.get('text', '')}\n")
+    return "".join(raw_parts)
 
 
 def _stats(path: Path, *, encoding: str) -> dict[str, object]:
@@ -186,7 +197,7 @@ def file_reckoning(
     regex: bool = False,
     ignore_case: bool = False,
     encoding: str = "utf-8",
-) -> dict[str, object]:
+) -> str | dict[str, object]:
     """Reckon signal from large files with bounded, context-efficient reads.
 
     When to use:
@@ -225,48 +236,39 @@ def file_reckoning(
         raise ValueError("`query` is required for search/extract actions.")
 
     if action == "head":
-        return {"action": action, "path": str(p), "rows": _head_lines(p, max_lines=max_lines, encoding=encoding)}
+        rows = _head_lines(p, max_lines=max_lines, encoding=encoding)
+        return _rows_to_snippet(rows)
     if action == "tail":
-        return {"action": action, "path": str(p), "rows": _tail_lines(p, max_lines=max_lines, encoding=encoding)}
+        rows = _tail_lines(p, max_lines=max_lines, encoding=encoding)
+        return _rows_to_snippet(rows)
     if action == "range":
-        return {
-            "action": action,
-            "path": str(p),
-            "rows": _range_lines(
-                p,
-                start_line=start_line,
-                end_line=end_line,
-                max_lines=max_lines,
-                encoding=encoding,
-            ),
-        }
+        rows = _range_lines(
+            p,
+            start_line=start_line,
+            end_line=end_line,
+            max_lines=max_lines,
+            encoding=encoding,
+        )
+        return _rows_to_snippet(rows)
     if action == "search":
-        return {
-            "action": action,
-            "path": str(p),
-            "query": query,
-            "rows": _search_lines(
-                p,
-                query=query,
-                regex=regex,
-                ignore_case=ignore_case,
-                before=before,
-                after=after,
-                max_matches=max_matches,
-                encoding=encoding,
-            ),
-        }
+        rows = _search_lines(
+            p,
+            query=query,
+            regex=regex,
+            ignore_case=ignore_case,
+            before=before,
+            after=after,
+            max_matches=max_matches,
+            encoding=encoding,
+        )
+        return _rows_to_snippet(rows)
     if action == "extract":
-        return {
-            "action": action,
-            "path": str(p),
-            "query": query,
-            "rows": _extract_lines(
-                p,
-                query=query,
-                ignore_case=ignore_case,
-                max_matches=max_matches,
-                encoding=encoding,
-            ),
-        }
+        rows = _extract_lines(
+            p,
+            query=query,
+            ignore_case=ignore_case,
+            max_matches=max_matches,
+            encoding=encoding,
+        )
+        return _rows_to_snippet(rows)
     return {"action": action, "stats": _stats(p, encoding=encoding)}

@@ -32,8 +32,8 @@ Parameters:
 - `action`: `head | tail | range | search | extract | stats`
 - `query`: required for `search` and `extract`
 - `start_line`, `end_line`: used by `range`
-- `max_lines`: cap result rows for `head`, `tail`, `range`
-- `max_matches`: cap match rows for `search`, `extract`
+- `max_lines`: cap output lines for `head`, `tail`, `range`
+- `max_matches`: cap match lines for `search`, `extract`
 - `before`, `after`: context lines around `search` matches
 - `regex`: treat `query` as regex in `search`
 - `ignore_case`: case-insensitive `search`/`extract`
