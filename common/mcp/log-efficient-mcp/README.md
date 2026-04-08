@@ -88,3 +88,32 @@ Agent usage policy:
 5. Prefer `return_mode="auto"` for exploratory commands where short output might be useful.
 6. Use `return_mode="inline_only"` only when full immediate output is explicitly needed.
 7. For large outputs, do not re-run inline; inspect the log via `log_explore` instead.
+
+## Handoff Tool: `handoffInstructions`
+
+`handoffInstructions` loads instructions from `HANDOFF.md` at the workspace root.
+
+Workspace root resolution:
+
+- `LOG_EFFICIENT_MCP_WORKSPACE_ROOT` if set
+- Otherwise, the nearest ancestor of the current working directory with a workspace marker such as `.git` or `HANDOFF.md`
+- Otherwise, the nearest ancestor of the tool module with a workspace marker
+- Otherwise, the current working directory as a fallback
+
+Parameters:
+
+- None
+
+Behavior:
+
+- Reads `HANDOFF.md` and returns its contents as `instructions`.
+- Returns `status="missing"` if `HANDOFF.md` does not exist.
+- Returns `status="empty"` if `HANDOFF.md` exists but has no usable content.
+- Returns `status="ok"` when instructions were loaded successfully.
+- Returns `workspace_root` and `source_file` so callers can verify what path was actually resolved.
+
+Recommended usage:
+
+1. Write the next-turn instructions into `HANDOFF.md` at the workspace root.
+2. Call `handoffInstructions`.
+3. Have the agent follow the returned `instructions`.

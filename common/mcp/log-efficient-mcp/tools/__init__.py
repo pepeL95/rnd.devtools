@@ -3,5 +3,6 @@
 from tools.file_reckoning import log_explore
 from tools.health import health
 from tools.script_runna import script_runna
+from tools.handoff_instructions import handoff_instructions
 
-__all__ = ["log_explore", "script_runna", "health"]
+__all__ = ["log_explore", "script_runna", "health", "handoff_instructions"]
